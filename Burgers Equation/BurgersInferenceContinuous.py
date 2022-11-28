@@ -1,9 +1,4 @@
 
-
-# %% [markdown]
-# ## Libraries and Dependencies
-
-# %%
 import sys, os
 filepath = os.path.abspath(__file__)
 root_dir = os.path.dirname(os.path.dirname(filepath))
@@ -29,17 +24,15 @@ np.random.seed(1234)
 LBFGS_iterations = 50000
 
 
-# %%
 # CUDA support 
 if torch.cuda.is_available():
     device = torch.device('cuda')
 else:
     device = torch.device('cpu')
 
-# %% [markdown]
+
 # ## Physics-informed Neural Networks
 
-# %%
 # the deep neural network
 class DNN(torch.nn.Module):
     def __init__(self, layers):
@@ -70,7 +63,6 @@ class DNN(torch.nn.Module):
         out = self.layers(x)
         return out
 
-# %%
 # the physics-guided neural network
 class PhysicsInformedNN():
     def __init__(self, X_u, u, X_f, layers, lb, ub, nu):
@@ -172,10 +164,8 @@ class PhysicsInformedNN():
         f = f.detach().cpu().numpy()
         return u, f
 
-# %% [markdown]
 # ## Configurations
 
-# %%
 nu = 0.01/np.pi
 noise = 0.0        
 
@@ -214,18 +204,14 @@ idx = np.random.choice(X_u_train.shape[0], N_u, replace=False)
 X_u_train = X_u_train[idx, :]
 u_train = u_train[idx,:]
 
-# %% [markdown]
 # ## Training
 
-# %%
 model = PhysicsInformedNN(X_u_train, u_train, X_f_train, layers, lb, ub, nu)
 
-# %%
-# %%time
+
                
 model.train()
 
-# %%
 u_pred, f_pred = model.predict(X_star)
 
 error_u = np.linalg.norm(u_star-u_pred,2)/np.linalg.norm(u_star,2)
@@ -234,12 +220,10 @@ print('Error u: %e' % (error_u))
 U_pred = griddata(X_star, u_pred.flatten(), (X, T), method='cubic')
 Error = np.abs(Exact - U_pred)
 
-# %% [markdown]
+
 # ## Visualizations
 
-# %%
 
-""" The aesthetic setting has changed. """
 
 ####### Row 0: u(t,x) ##################    
 
@@ -282,7 +266,6 @@ ax.tick_params(labelsize=15)
 
 plt.show()
 
-# %%
 ####### Row 1: u(t,x) slices ################## 
 
 """ The aesthetic setting has changed. """
