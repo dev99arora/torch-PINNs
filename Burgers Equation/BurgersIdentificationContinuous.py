@@ -1,7 +1,4 @@
-# %% [markdown]
-# ## Libraries and Dependencies
 
-# %%
 import sys, os
 filepath = os.path.abspath(__file__)
 root_dir = os.path.dirname(os.path.dirname(filepath))
@@ -28,17 +25,14 @@ np.random.seed(1234)
 LBFGS_iterations = 50000
 Adam_iterations = 10000
 
-# %%
 # CUDA support 
 if torch.cuda.is_available():
     device = torch.device('cuda')
 else:
     device = torch.device('cpu')
 
-# %% [markdown]
 # ## Physics-informed Neural Networks
 
-# %%
 # the deep neural network
 class DNN(torch.nn.Module):
     def __init__(self, layers):
@@ -69,7 +63,6 @@ class DNN(torch.nn.Module):
         out = self.layers(x)
         return out
 
-# %%
 # the physics-guided neural network
 class PhysicsInformedNN():
     def __init__(self, X, u, layers, lb, ub):
@@ -198,10 +191,8 @@ class PhysicsInformedNN():
         f = f.detach().cpu().numpy()
         return u, f
 
-# %% [markdown]
 # ## Configurations
 
-# %%
 nu = 0.01/np.pi
 
 N_u = 2000
@@ -222,11 +213,8 @@ u_star = Exact.flatten()[:,None]
 lb = X_star.min(0)      # lower bound
 ub = X_star.max(0)      # upper bound
 
-# %% [markdown]
 # ## Training on Non-noisy Data
 
-# %%
-# %%time
 
 noise = 0.0            
 
@@ -239,7 +227,7 @@ u_train = u_star[idx,:]
 model = PhysicsInformedNN(X_u_train, u_train, layers, lb, ub)
 model.train(0)
 
-# %%
+
 # evaluations
 u_pred, f_pred = model.predict(X_star)
 
@@ -258,10 +246,9 @@ print('Error u: %e' % (error_u))
 print('Error l1: %.5f%%' % (error_lambda_1))                             
 print('Error l2: %.5f%%' % (error_lambda_2))  
 
-# %% [markdown]
+
 # ## Training on Noisy Data
 
-# %%
 noise = 0.01    
 
 # create training set
@@ -271,10 +258,8 @@ u_train = u_train + noise*np.std(u_train)*np.random.randn(u_train.shape[0], u_tr
 model = PhysicsInformedNN(X_u_train, u_train, layers, lb, ub)
 model.train(Adam_iterations)            
 
-# %% [markdown]
 # ## Visualizations
 
-# %%
 
 """ The aesthetic setting has changed. """
 
@@ -319,7 +304,6 @@ ax.tick_params(labelsize=15)
 
 plt.show()
 
-# %%
 ####### Row 1: u(t,x) slices ################## 
 
 """ The aesthetic setting has changed. """
@@ -381,7 +365,7 @@ for item in ([ax.title, ax.xaxis.label, ax.yaxis.label] +
 
 plt.show()
 
-# %%
+
 # evaluations
 u_pred, f_pred = model.predict(X_star)
 
@@ -396,7 +380,7 @@ print('Error u: %e' % (error_u))
 print('Error l1: %.5f%%' % (error_lambda_1_noisy))                             
 print('Error l2: %.5f%%' % (error_lambda_2_noisy))    
 
-# %%
+
 ####### Row 3: Identified PDE ##################    
 
 # fig = plt.figure(figsize=(14, 10))
