@@ -1,30 +1,4 @@
-# %% [markdown]
-# # Attribute
-# 
-# **Original Work**: *Maziar Raissi, Paris Perdikaris, and George Em Karniadakis*
-# 
-# **Github Repo** : https://github.com/maziarraissi/PINNs
-# 
-# **Link:** https://github.com/maziarraissi/PINNs/tree/master/appendix/continuous_time_identification%20(Burgers)
-# 
-# @article{raissi2017physicsI,
-#   title={Physics Informed Deep Learning (Part I): Data-driven Solutions of Nonlinear Partial Differential Equations},
-#   author={Raissi, Maziar and Perdikaris, Paris and Karniadakis, George Em},
-#   journal={arXiv preprint arXiv:1711.10561},
-#   year={2017}
-# }
-# 
-# @article{raissi2017physicsII,
-#   title={Physics Informed Deep Learning (Part II): Data-driven Discovery of Nonlinear Partial Differential Equations},
-#   author={Raissi, Maziar and Perdikaris, Paris and Karniadakis, George Em},
-#   journal={arXiv preprint arXiv:1711.10566},
-#   year={2017}
-# }
 
-# %% [markdown]
-# ## Libraries and Dependencies
-
-# %%
 import sys, os
 filepath = os.path.abspath(__file__)
 root_dir = os.path.dirname(os.path.dirname(filepath))
@@ -51,7 +25,6 @@ np.random.seed(1234)
 LBFGS_iterations = 50000
 Adam_iterations = 10000
 
-# %%
 # CUDA support 
 if torch.cuda.is_available():
     device = torch.device('cuda')
@@ -60,7 +33,6 @@ else:
 
 # ## Physics-informed Neural Networks
 
-# %%
 # the deep neural network
 class DNN(torch.nn.Module):
     def __init__(self, layers):
@@ -91,7 +63,6 @@ class DNN(torch.nn.Module):
         out = self.layers(x)
         return out
 
-# %%
 # the physics-guided neural network
 class PhysicsInformedNN():
     def __init__(self, x0, u0, x1, layers, dt, lb, ub, q):
@@ -226,10 +197,7 @@ class PhysicsInformedNN():
 
         return u1_star.detach().cpu().numpy()
 
-# %% [markdown]
 # ## Configurations
-
-# %%
         
 q = 500
 layers = [1, 50, 50, 50, q+1]
